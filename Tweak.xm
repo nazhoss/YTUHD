@@ -1,3 +1,7 @@
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#include <string.h>  
+
 #import <substrate.h>
 #import <sys/sysctl.h>
 #import <version.h>
@@ -38,7 +42,7 @@ static void hookFormatsBase(YTIHamplayerConfig *config) {
 }
 
 static void hookFormats(MLABRPolicy *self) {
-    hookFormatsBase([self valueForKey:@"_hamplayerConfig"]);
+    hookFormatsBase([(id)self valueForKey:@"_hamplayerConfig"]);
 }
 
 %hook MLABRPolicy
@@ -199,7 +203,7 @@ NSTimer *bufferingTimer = nil;
 
 - (void)didLoadHLSMasterPlaylist:(id)arg1 {
     %orig;
-    MLHLSMasterPlaylist *playlist = [self valueForKey:@"_completeMasterPlaylist"];
+     MLHLSMasterPlaylist *playlist = [(id)self valueForKey:@"_completeMasterPlaylist"];
     NSArray *remotePlaylists = [playlist remotePlaylists];
     [[self delegate] streamSelectorHasSelectableVideoFormats:remotePlaylists];
 }
