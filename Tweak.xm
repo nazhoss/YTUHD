@@ -1,16 +1,21 @@
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <CoreMedia/CoreMedia.h>
-#import <Foundation/NSProcessInfo.h>
-#import <Foundation/NSString.h>
+#include <string.h>
+
 #import <HBLog.h>
 #import <substrate.h>
+
 #ifdef SIDELOAD
 #import <libundirect/libundirect_dynamic.h>
 #else
 #import <libundirect/libundirect.h>
 #endif
+
 #import <sys/sysctl.h>
 #import <version.h>
 #import "Header.h"
+
 
 typedef struct {
     const unsigned int *data;
@@ -53,8 +58,8 @@ static void hookFormatsBase(YTIHamplayerConfig *config) {
     filter.vp9.maxFps = MAX_FPS;
 }
 
-static void hookFormats(MLABRPolicy *self) {
-    hookFormatsBase([self valueForKey:@"_hamplayerConfig"]);
+static void hookFormats(id selfObj) {
+    hookFormatsBase([(id)selfObj valueForKey:@"_hamplayerConfig"]);
 }
 
 %hook MLABRPolicy
@@ -87,12 +92,12 @@ static void hookFormats(MLABRPolicy *self) {
 %hook MLHAMPlayerItem
 
 - (void)load {
-    hookFormatsBase([self valueForKey:@"_hamplayerConfig"]);
+     hookFormatsBase([(id)self valueForKey:@"_hamplayerConfig"]);
     %orig;
 }
 
 - (void)loadWithInitialSeekRequired:(BOOL)initialSeekRequired initialSeekTime:(double)initialSeekTime {
-    hookFormatsBase([self valueForKey:@"_hamplayerConfig"]);
+     hookFormatsBase([(id)self valueForKey:@"_hamplayerConfig"]);
     %orig;
 }
 
@@ -188,7 +193,7 @@ static void hookFormats(MLABRPolicy *self) {
 
 - (void)didLoadHLSMasterPlaylist:(id)arg1 {
     %orig;
-    MLHLSMasterPlaylist *playlist = [self valueForKey:@"_completeMasterPlaylist"];
+    MLHLSMasterPlaylist *playlist = [(id)self valueForKey:@"_completeMasterPlaylist"];
     NSArray *remotePlaylists = [playlist remotePlaylists];
     [[self delegate] streamSelectorHasSelectableVideoFormats:remotePlaylists];
 }

@@ -1,6 +1,7 @@
 #ifndef YTUHD_H_
 #define YTUHD_H_
 
+#import <Foundation/Foundation.h>
 #import <YouTubeHeader/HAMDefaultABRPolicy.h>
 // #import <YouTubeHeader/HAMDefaultABRPolicyConfig.h>
 #import <YouTubeHeader/MLABRPolicyNew.h>
